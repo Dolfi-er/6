@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-theme">
+    <div class="container">
+        <header>
+            <h1>Личный кабинет</h1>
+            <button id="logout">Выйти</button>
+        </header>
+        
+        <div class="profile-content">
+            <div class="user-data">
+                <h2>Добро пожаловать, <span id="username"></span>!</h2>
+                <div class="data-section">
+                    <h3>Серверные данные</h3>
+                    <button id="refresh-data">Обновить данные</button>
+                    <div id="data-container"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="theme-switcher">
+            <button id="theme-toggle">Темная тема</button>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
