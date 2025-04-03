@@ -4,9 +4,13 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 const PORT = 3000;
+
+app.use(cookieParser());
 
 // Настройка сессий
 app.use(session({
@@ -20,6 +24,16 @@ app.use(session({
         maxAge: 24 * 60 * 60 * 1000 // 1 день
     }
 }));
+
+app.use((req, res, next) => {
+    // Проверяем куки на наличие темы
+    if (req.cookies.theme && ['light', 'dark'].includes(req.cookies.theme)) {
+        res.locals.theme = req.cookies.theme;
+    } else {
+        res.locals.theme = 'light'; // Тема по умолчанию
+    }
+    next();
+});
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -125,3 +139,17 @@ app.use((req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
+app.post('/set-theme', (req, res) => {
+    const { theme } = req.body;
+    if (['light', 'dark'].includes(theme)) {
+        res.cookie('theme', theme, {
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+            httpOnly: true,
+            sameSite: 'lax'
+        });
+        return res.json({ success: true });
+    }
+    res.status(400).json({ error: 'Invalid theme' });
+});
+
